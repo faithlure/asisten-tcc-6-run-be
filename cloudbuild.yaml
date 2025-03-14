@@ -25,6 +25,12 @@ steps:
         "be",
         "--image",
         "gcr.io/$PROJECT_ID/tcc-be",
+        '--timeout',
+        '1000s',
+        '--port',
+        '5000',
+        '--region',
+        'asia-southeast2',
         "--allow-unauthenticated",
       ]
 options:
