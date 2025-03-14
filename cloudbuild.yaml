@@ -27,3 +27,5 @@ steps:
         "gcr.io/$PROJECT_ID/tcc-be",
         "--allow-unauthenticated",
       ]
+options:
+  logging: CLOUD_LOGGING_ONLY
