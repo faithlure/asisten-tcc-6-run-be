@@ -1,10 +1,14 @@
 import express from "express";
 import cors from "cors";
-import Route from "./routes/Route.js";
+import UserRoute from "./routes/UserRoute.js";
 
 const app = express();
+app.set("view engine", "ejs");
+
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.use(Route);
+app.get("/", (req, res) => res.render("index"));
+app.use(UserRoute);
 
-app.listen(5000, ()=> console.log('Server up and running....'));
+app.listen(5000, () => console.log("Server connected"));
