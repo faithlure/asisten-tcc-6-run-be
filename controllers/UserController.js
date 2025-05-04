@@ -105,10 +105,10 @@ async function loginHandler(req, res){
 
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
-              const accessToken = jwt.sign(userPlain, process.env.ACCESS_TOKEN_SECRET, {
+              const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
                   expiresIn : '1d' 
               });
-              const refreshToken = jwt.sign(userPlain, process.env.AUTH_TOKEN_SECRET, {
+              const refreshToken = jwt.sign(safeUserData, process.env.AUTH_TOKEN_SECRET, {
                   expiresIn : '1d' 
               });
               await User.update({refresh_token:refreshToken},{
@@ -127,7 +127,7 @@ async function loginHandler(req, res){
               res.status(200).json({
                   status: "Succes",
                   message: "Login Berhasil",
-                  user,
+                  safeUserData,
                   accessToken 
               });
           }
