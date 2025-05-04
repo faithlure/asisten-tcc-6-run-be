@@ -16,8 +16,7 @@ const router = express.Router();
 //endpoint akses token
 router.get('/token', refreshToken);
 //endpoin auth
-router.post('/login', loginhandler);
-router.post('/register', Register);
+router.post('/login', loginHandler);
 router.delete('/logout', logout);
 
 //endpoint data biasa

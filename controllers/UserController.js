@@ -40,7 +40,7 @@ async function createUser(req, res) {
 }
 }
 
-//nambahin case password
+//baru nambahin case password
 async function updateUser(req, res) {
   try{
     const { name, email, gender} = req.body;
@@ -99,7 +99,7 @@ async function loginHandler(req, res){
       if(user){
         //Data User itu nanti bakalan dipake buat ngesign token kan
         // data user dari sequelize itu harus diubah dulu ke bentuk object
-        //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya kayak password caranya gini :
+        //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya  karena bisa didecode kayak password caranya gini :
         const userPlain = user.toJson(); // Konversi ke object
         const { password, refresh_token, ...safeUserData } = userPlain;
 
@@ -122,8 +122,6 @@ async function loginHandler(req, res){
                   maxAge  : 24*60*60*1000,
                   secure:false //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
               });
-              
-
               res.status(200).json({
                   status: "Succes",
                   message: "Login Berhasil",
@@ -152,7 +150,7 @@ async function loginHandler(req, res){
   }
 }
 
-//logout
+//nambah logout
 async function logout(req,res){
   const refreshToken = req.cookies.refreshToken; //mgecek refresh token sama gak sama di database
   if(!refreshToken) return res.sendStatus(204);
