@@ -43,7 +43,7 @@ async function createUser(req, res) {
 //baru nambahin case password
 async function updateUser(req, res) {
   try{
-    const { name, email, gender} = req.body;
+    const { name, email, gender, password} = req.body;
     let updatedData = {
       name, email, gender
     }; //nyimpen jadi object
@@ -100,15 +100,16 @@ async function loginHandler(req, res){
         //Data User itu nanti bakalan dipake buat ngesign token kan
         // data user dari sequelize itu harus diubah dulu ke bentuk object
         //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya  karena bisa didecode kayak password caranya gini :
-        const userPlain = user.toJson(); // Konversi ke object
-        const { password, refresh_token, ...safeUserData } = userPlain;
+        const userPlain = user.toJSON(); // Konversi ke object
+        const { password: _, refresh_token: __, ...safeUserData } = userPlain;
+
 
           const decryptPassword = await bcrypt.compare(password, user.password);
           if(decryptPassword){
               const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-                  expiresIn : '1d' 
+                  expiresIn : '30s' 
               });
-              const refreshToken = jwt.sign(safeUserData, process.env.AUTH_TOKEN_SECRET, {
+              const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
                   expiresIn : '1d' 
               });
               await User.update({refresh_token:refreshToken},{
@@ -118,7 +119,7 @@ async function loginHandler(req, res){
               });
               res.cookie('refreshToken', refreshToken,{
                   httpOnly : false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
-                  sameSite : 'none',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
+                  sameSite : 'lax',  //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
                   maxAge  : 24*60*60*1000,
                   secure:false //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
               });
